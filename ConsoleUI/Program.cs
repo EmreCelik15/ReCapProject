@@ -11,18 +11,18 @@ namespace ConsoleUI
     {
         static void Main(string[] args)
         {
-            CarManager carManager = new CarManager(new InMemoryCarDal());
-            foreach (var cars in carManager.GetAll())
+            CarManager carManager1 = new CarManager(new InMemoryCarDal());
+            foreach (var cars in carManager1.GetAll())
             {
                 Console.WriteLine(cars.BrandId+" "+cars.Description);
             }
-            carManager.Delete(new Car { Id = 1 });
+            carManager1.Delete(new Car { Id = 1 });
 
-            foreach (var cars in carManager.GetAll())
+            foreach (var cars in carManager1.GetAll())
             {
                 Console.WriteLine(cars.Id);
             }
-            carManager.Update(new Car { Id = 2, Description = "Sport Car", BrandId = 4556, ColorId = 985674, DailyPrice = 36000, ModelYear = 2011 });
+            carManager1.Update(new Car { Id = 2, Description = "Sport Car", BrandId = 4556, ColorId = 985674, DailyPrice = 36000, ModelYear = 2011 });
         }
     }
 }
