@@ -1,0 +1,70 @@
+﻿using DataAccess.Abstract;
+using Entities.Concrete;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Text;
+
+namespace DataAccess.Concrete.EntityFramework
+{
+    //NuGet:.NetCore içerisinde.
+    public class EfCarDal : ICarDal
+    {
+        public void Add(Car entity)
+        {
+            using (MyDatabaseContext context=new MyDatabaseContext())//Böyle yapınca daha performanslı ürün oluyor.
+            {
+                var addedEntity = context.Entry(entity);
+                addedEntity.State = EntityState.Added;
+                context.SaveChanges();
+            }
+        }
+
+        public void Delete(Car entity)
+        {
+            using (MyDatabaseContext context=new MyDatabaseContext())
+            {
+                var deletedEntity = context.Entry(entity);
+                deletedEntity.State = EntityState.Deleted;
+                context.SaveChanges();
+            }
+            
+        }
+
+        public Car Get(Expression<Func<Car, bool>> filter)
+        {
+            using (MyDatabaseContext context = new MyDatabaseContext())
+            {
+                return context.Set<Car>().SingleOrDefault(filter);
+            }
+        }
+
+        public List<Car> GetAll(Expression<Func<Car, bool>> filter = null)
+        {
+            using (MyDatabaseContext context = new MyDatabaseContext())
+            {
+                return filter == null
+                    ? context.Set<Car>().ToList() //filtre null ise bu çalışır
+                    : context.Set<Car>().Where(filter).ToList(); //filtre null değilse verilen filtreye göre bu çalışır.
+            }
+        }
+        public void Update(Car entity)
+        {
+                using (MyDatabaseContext context = new MyDatabaseContext())
+                {
+                    var updatedEntity = context.Entry(entity);
+                    updatedEntity.State = EntityState.Modified;
+                    context.SaveChanges();
+                }
+        }
+
+
+        
+
+        
+
+        
+    }
+}

@@ -1,6 +1,5 @@
 ﻿using Business.Abstract;
 using DataAccess.Abstract;
-using DataAccess.Concrete.InMemory;
 using Entities.Concrete;
 using System;
 using System.Collections.Generic;
@@ -19,7 +18,15 @@ namespace Business.Concrete
 
         public void Add(Car car)
         {
-            _carDal.Add(car);
+            if (car.DailyPrice>0)
+            {
+                _carDal.Add(car);
+            }
+            else
+            {
+                Console.WriteLine("Lütfen günliğk fiyatı 0'dan yüksek giriniz");
+            }
+            
         }
 
         public void Delete(Car car)
@@ -31,12 +38,6 @@ namespace Business.Concrete
         {
             return _carDal.GetAll();
         }
-
-        public List<Car> GetById(int carId)
-        {
-            return _carDal.GetById(carId);
-        }
-
         public void Update(Car car)
         {
             _carDal.Update(car);
