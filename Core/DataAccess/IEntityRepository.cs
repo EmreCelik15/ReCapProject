@@ -1,10 +1,10 @@
-﻿using Entities.Abstract;
+﻿using Core.Entities;//Bu Core.Entities olmalıydı.Neden olmadı araştır.
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace DataAccess.Abstract
+namespace Core.DataAccess//Core katmanı diğer katmanları referans almaz.
 {
     //Generic Constrain
     //IEntity:IEntity olabilir ya da IEntity' i implemente eden nesne olabilir.
