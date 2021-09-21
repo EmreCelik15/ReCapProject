@@ -1,4 +1,4 @@
-# ReCapProject - Araç Kiralama Projesi
+# ReCapProject - Car Rental Project
 
 
 
