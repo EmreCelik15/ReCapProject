@@ -1,5 +1,10 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspect.Autofac;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Performance;
+using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Business;
 using Core.Utilities.Helper;
 using Core.Utilities.Results;
@@ -22,6 +27,10 @@ namespace Business.Concrete
         {
             _carImageDal = carImageDal;
         }
+
+        [SecuredOperation("admin")]
+        [CacheRemoveAspect("ICarImageService.Get")]
+        [ValidationAspect(typeof(CarImageValidator))]
         public IResult Add(IFormFile file, CarImage carImage)
         {
             IResult result = BusinessRules.Run(CheckCarImageCount(carImage.CarId));
@@ -40,6 +49,10 @@ namespace Business.Concrete
             return new SuccessResult(Messages.CarImageAdded);
         }
 
+
+        [SecuredOperation("admin")]
+        [CacheRemoveAspect("ICarImageService.Get")]
+        [ValidationAspect(typeof(CarImageValidator))]
         public IResult Delete(CarImage carImage)
         {
             var image = _carImageDal.Get(c => c.CarId == carImage.CarId);
@@ -53,16 +66,24 @@ namespace Business.Concrete
             
         }
 
+        [PerformanceAspect(5)]
+        [CacheAspect]
         public IDataResult<CarImage> Get(int Id)
         {
             return new SuccessDataResult<CarImage>(_carImageDal.Get(p => p.Id == Id));
         }
 
+
+        [PerformanceAspect(5)]
+        [CacheAspect]
         public IDataResult<List<CarImage>> GetAll()
         {
             return new SuccessDataResult<List<CarImage>>(_carImageDal.GetAll());
         }
 
+
+        [PerformanceAspect(5)]
+        [CacheAspect]
         public IDataResult<List<CarImage>> GetByCarId(int Id)
         {
             IResult result = BusinessRules.Run(CheckIfCarImageAny(Id));
@@ -74,6 +95,9 @@ namespace Business.Concrete
             
         }
 
+        [SecuredOperation("admin")]
+        [CacheRemoveAspect("ICarImageService.Get")]
+        [ValidationAspect(typeof(CarImageValidator))]
         public IResult Update(IFormFile file, CarImage carImage)
         {
             var image = _carImageDal.Get(c => c.CarId == carImage.CarId);
@@ -90,6 +114,8 @@ namespace Business.Concrete
             _carImageDal.Update(carImage);
             return new SuccessResult(Messages.CarImageUpdated);
         }
+        
+        
         private IResult CheckCarImageCount(int Id)
         {
             var result = _carImageDal.GetAll(c => c.CarId == Id).Count>5;
